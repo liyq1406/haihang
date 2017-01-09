@@ -1,0 +1,20 @@
+upstream swagger {
+    server ${BACKEND};
+}
+
+server {
+      listen 80;
+      server_name localhost;
+      root   /dist;
+      index  index.html;
+      location ^~/apis/ {
+            proxy_pass http://swagger;
+        }
+
+      location ^~/spec/ {
+            allow all;
+        }
+      location ~*\.(html|js|svg|css|png|woff2|woff|ttf|jpg|ico|json|yaml) {
+            allow all;
+      }
+}

@@ -1,0 +1,1635 @@
+swagger: '2.0'
+info:
+  title: HNA支付模块接口
+  description: 测试支付模块相关接口
+  version: "1.2.0"
+  contact: 
+    email: bin.long@youruncloud.com
+  termsOfService: http://gitlab.youruncloud.com/
+# the domain of the service
+# host: 192.168.3.222
+host: somedomain
+# array of all schemes that your API supports
+schemes:
+  - http
+# will be prefixed to all paths
+basePath: /apis/v1
+
+produces:
+  - application/json
+  
+paths:
+  /payment_accounts/:
+    post:
+      summary: 创建账户
+      description: |
+        创建账户
+      parameters:
+        - name: body
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/payment_account_create'
+      tags:
+        - payment_accounts
+      responses:
+        200:
+          description: 创建的新账户对象
+          schema:
+            $ref: '#/definitions/payment_account'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    get:
+      summary: 获取账户列表
+      description: |
+        获取账户列表
+      parameters:
+        - name: payment_account_uuid
+          in: query
+          description: 账户uuid
+          required: false
+          type: number
+        - name: is_valid
+          in: query
+          description: 激活状态
+          required: false
+          type: boolean
+        - name: user_uuid
+          in: query
+          description: envID
+          required: false
+          type: string
+        - name: balance__gte
+          in: query
+          description: 余额大于
+          required: false
+          type: string
+        - name: balance__lte
+          in: query
+          description: 余额小于
+          required: false
+          type: string
+        - name: credit__gte
+          in: query
+          description: 信用额度大于
+          required: false
+          type: string
+        - name: credit__lte
+          in: query
+          description: 信用额度小于
+          required: false
+          type: string
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+      tags:
+        - payment_accounts
+      responses:
+        200:
+          description: 获取账户列表
+          schema:
+            $ref: '#/definitions/payment_account'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /payment_accounts/{payment_account_uuid}/:
+    get:
+      summary: 获取指定账户详情
+      description: |
+        获取指定账户详情
+      parameters:
+        - name: payment_account_uuid
+          in: path
+          description: 账户唯一标识
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - payment_accounts
+      responses:
+        200:
+          description: 指定账户对象
+          schema:
+            $ref: '#/definitions/payment_account'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        
+    patch:
+      summary: 修改账户信息
+      description: |
+        修改账户信息
+      parameters:
+        - name: payment_account_uuid
+          in: path
+          description: 账户唯一标识
+          required: true
+          type: string
+          format: uuid
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/payment_account_create'
+      tags:
+        - payment_accounts
+      responses:
+        200:
+          description: 修改后的账户对象
+          schema:
+            $ref: '#/definitions/payment_account'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /payment_account/user/:
+    get:
+      summary: 获取指定账户详情
+      description: |
+        根据用户uuid获取指定账户详情
+      parameters:
+        - name: user_uuid
+          in: query
+          description: 用户envId
+          required: true
+          type: number
+          format: number
+      tags:
+        - payment_accounts
+      responses:
+        200:
+          description: 指定账户对象
+          schema:
+            $ref: '#/definitions/payment_account'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /account_records/{payment_account_uuid}/:
+    get:
+      summary: 获取指定账户变更记录
+      description: |
+        获取指定账户变更记录
+      parameters:
+        - name: payment_account_uuid
+          in: path
+          description: 账户唯一标识
+          required: true
+          type: string
+          format: uuid
+        - name: modify_balance__gte
+          in: query
+          description: 修改额度大于
+          required: false
+          type: number
+        - name: modify_balance__lte
+          in: query
+          description: 修改额度小于
+          required: false
+          type: number
+        - name: modify_source_type
+          in: query
+          description: 修改来源
+          required: false
+          type: string
+        - name: modify_source_uuid
+          in: query
+          description: 修改来源uuid
+          required: false
+          type: string
+        - name: order_by
+          in: query
+          description: 排序字段
+          required: false
+          type: string
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+        - name: desc
+          in: query
+          description: 是否降序排列
+          required: false
+          type: boolean
+      tags:
+        - account_records
+      responses:
+        200:
+          description: 指定账户变更记录列表
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/account_record'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /account_record/user/:
+    get:
+      summary: 获取指定账户变更记录
+      description: |
+        根据用户uuid获取指定账户变更记录
+      parameters:
+        - name: user_uuid
+          in: query
+          description: 用户唯一标识
+          required: true
+          type: string
+          format: uuid
+        - name: order_by
+          in: query
+          description: 排序字段
+          required: false
+          type: string
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+        - name: desc
+          in: query
+          description: 是否降序排列
+          required: false
+          type: boolean
+      tags:
+        - account_records
+      responses:
+        200:
+          description: 指定账户变更记录列表
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/account_record'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+          
+  /coupons/:
+    post:
+      summary: 创建优惠码
+      description: |
+        创建优惠码
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/coupon_create'
+      tags:
+        - coupons
+      responses:
+        201:
+          description: 创建的优惠码信息
+          schema:
+            $ref: '#/definitions/coupon_create'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+    get:
+      summary: 优惠码列表
+      description: |
+        可用优惠码列表
+      tags:
+        - coupons
+      responses:
+        201:
+          description: 优惠码列表信息
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/coupon'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /coupons/list_all/:
+    get:
+      summary: 优惠码列表
+      description: |
+        可用优惠码列表
+      tags:
+        - coupons
+      responses:
+        201:
+          description: 优惠码列表信息
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/coupon'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+          
+  /coupons/{coupon}/:
+    get:
+      summary: 获取指定优惠码详情
+      description: |
+        获取指定优惠码详情
+      parameters:
+        - name: coupon
+          in: path
+          description: 优惠码code或则uuid
+          required: true
+          type: string
+      tags:
+        - coupons
+      responses:
+        200:
+          description: 指定优惠码对象
+          schema:
+            $ref: '#/definitions/coupon'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /coupons/{coupon}/binding/:
+    post:
+      summary: 绑定优惠码
+      description: |
+        用户领取优惠码
+      parameters:
+        - name: coupon
+          in: path
+          required: true
+          type: string
+          description: 优惠码code或uuid
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/coupon_user_post'
+      tags:
+        - coupons
+      responses:
+        200:
+          description: 绑定优惠码
+          schema:
+            $ref: '#/definitions/coupon_user'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /coupons/bindings/:
+    get:
+      summary: 查询用户绑定的优惠码
+      description: |
+        查询用户绑定的优惠码
+      parameters:
+        - name: user_uuid
+          in: query
+          description: 用户uuid
+          required: true
+          type: string
+      tags:
+        - coupons
+      responses:
+        200:
+          description: 查询用户绑定的优惠码
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/coupon_user'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /coupons/usage/:
+    get:
+      summary: 获取指定优惠码使用记录
+      description: |
+        获取指定优惠码使用记录
+      parameters:
+        - name: coupon_code
+          in: query
+          description: 优惠码code
+          required: false
+          type: string
+        - name: user_uuid
+          in: query
+          description: 用户唯一标识
+          required: false
+          type: string
+        - name: coupon_usage_uuid
+          in: query
+          description: 优惠码使用记录标识
+          required: false
+          type: string
+        - name: usage_source_type
+          in: query
+          description: 优惠码使用类型, 支付使用payment/充值使用account
+          required: false
+          type: string
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+        - name: desc
+          in: query
+          description: 是否按使用时间降序排列
+          required: false
+          type: boolean
+      tags:
+        - coupons
+      responses:
+        200:
+          description: 指定账户变更记录列表
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/coupon_usage'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /payments/:
+    post:
+      summary: 创建支付单
+      description: |
+        创建支付单
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/payment_create'
+      tags:
+        - payment
+      responses:
+        201:
+          description: 创建的新支付单
+          schema:
+            $ref: '#/definitions/payment'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+    get:
+      summary: 支付单列表
+      description: |
+        支付单列表
+      parameters:
+        - name: payment_uuid
+          in: query
+          description: 支付单uuid
+          required: false
+          type: string
+          format: uuid
+        - name: user_uuid
+          in: query
+          description: envID
+          required: false
+          type: integer
+          format: int32
+        - name: payment_no
+          in: query
+          description: 订单号
+          required: false
+          type: string
+          format: string
+        - name: paid_method
+          in: query
+          description: 支付方式
+          required: false
+          type: string
+          format: string
+        - name: paid_status
+          in: query
+          description: 支付状态
+          required: false
+          type: string
+          format: string
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+      tags:
+        - payment
+      responses:
+        201:
+          description: 支付单列表信息
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/payment'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /payments/{payment_uuid}/:
+    get:
+      summary: 获取指定支付单详情
+      description: |
+        获取指定支付单详情
+      parameters:
+        - name: payment_uuid
+          in: path
+          description: 支付单唯一标识
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - payment
+      responses:
+        200:
+          description: 指定支付单对象
+          schema:
+            $ref: '#/definitions/payment'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /payments/user/:
+    get:
+      summary: 获取指定用户支付单列表
+      description: |
+        获取指定用户支付单列表
+      parameters:
+        - name: user_uuid
+          in: query
+          description: 用户唯一标识
+          required: true
+          type: string
+          format: uuid
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+        - name: desc
+          in: query
+          description: 是否降序排列
+          required: false
+          type: boolean
+      tags:
+        - payment
+      responses:
+        200:
+          description: 指定用户支付单列表
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/payment'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /payments/{payment_uuid}/record/:
+    get:
+      summary: 获取指定支付单处理记录
+      description: |
+        获取指定支付单处理记录
+      parameters:
+        - name: payment_uuid
+          in: path
+          description: 支付单唯一标识
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - payment
+      responses:
+        200:
+          description: 指定支付单处理记录
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/payment_record'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  # /payments/{payment_uuid}/pre_refund/:
+  #   post:
+  #     summary: 支付退款申请
+  #     description: |
+  #       支付退款申请
+  #     parameters:
+  #       - name: payment_uuid
+  #         in: path
+  #         description: 支付单唯一标识
+  #         required: true
+  #         type: string
+  #         format: uuid
+  #       - name: body
+  #         in: body
+  #         required: true
+  #         schema:
+  #           $ref: '#/definitions/payment_pre_refund'
+  #     tags:
+  #       - payment
+  #     responses:
+  #       201:
+  #         description: 支付结果(visa)或跳转url(alipay, paypal)
+  #         schema:
+  #           $ref: '#/definitions/payment_refund'
+  #       default:
+  #         description: Unexpected error
+  #         schema:
+  #           $ref: '#/definitions/Error'
+            
+  # /payments/{payment_uuid}/refund/:
+  #   post:
+  #     summary: 支付退款
+  #     description: |
+  #       支付退款
+  #     parameters:
+  #       - name: payment_uuid
+  #         in: path
+  #         description: 支付单唯一标识
+  #         required: true
+  #         type: string
+  #         format: uuid
+  #       - name: body
+  #         in: body
+  #         required: true
+  #         schema:
+  #           $ref: '#/definitions/payment_approval_refund'
+  #     tags:
+  #       - payment
+  #     responses:
+  #       201:
+  #         description: 退款结果(paypal)或跳转url(alipay)
+  #       default:
+  #         description: Unexpected error
+  #         schema:
+  #           $ref: '#/definitions/Error'
+            
+  /reconciliations/{reconciliation_uuid}/deal/:
+    post:
+      summary: 处理对账异常
+      description: |
+        处理对账异常
+      parameters:
+        - name: reconciliation_uuid
+          in: path
+          description: 对账异常唯一标识
+          required: true
+          type: string
+          format: uuid
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/reconciliation_deal'
+      tags:
+        - reconciliations
+      responses:
+        200:
+          description: 处理结果
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /reconciliations/{reconciliation_uuid}/:
+    get:
+      summary: 获取对账异常
+      description: |
+        获取对账异常
+      parameters:
+        - name: reconciliation_uuid
+          in: path
+          description: 对账异常唯一标识
+          required: true
+          type: string
+          format: uuid
+      tags:
+        - reconciliations
+      responses:
+        200:
+          description: 对账异常详情
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /reconciliations/:
+    get:
+      summary: 获取对账异常列表
+      description: |
+        获取对账异常列表
+      parameters:
+        - name: payment_no
+          in: query
+          description: 订单号
+          required: false
+          type: string
+          format: string
+        - name: error_type
+          in: query
+          description: 错误类型
+          required: false
+          type: string
+          format: string
+        - name: deal_status
+          in: query
+          description: 错误状态
+          required: false
+          type: string
+          format: string
+        - name: limit
+          in: query
+          description: 获取数量
+          required: false
+          type: integer
+          format: int32
+        - name: offet
+          in: query
+          description: 偏移量
+          required: false
+          type: integer
+          format: int32
+      tags:
+        - reconciliations
+      responses:
+        200:
+          description: 对账异常列表
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /bills/delete_bill/:
+    post:
+      summary:  账单删除 
+      description: |
+        账单删除 
+      parameters:
+        - name: billid_list
+          in: body
+          description:   要删除的账单id列表  
+          required: true
+          schema:
+            $ref: '#/definitions/delete_bill_pos'
+      tags:
+        - bills
+      responses:
+        200:
+          description: 删除账单成功
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /bills/getbills_byuserid/:
+    post:
+      summary:  获取账单详情 
+      description: |
+        通过用户id获取账单详情
+      parameters:
+        - name: page
+          in: query 
+          description: 页数
+          required: false
+          type: integer
+        - name: num
+          in: query
+          description: 每页账单个数
+          required: false
+          type: integer
+        - name: limite
+          in: query
+          description: 0表示全部账单，1表示已经支付的账单，默认为0
+          required: false
+          type: integer
+        - name:  user_uuid
+          in: body
+          description:    用户 uuid  
+          required: true
+          schema:
+            $ref: '#/definitions/getbills_byuserid'
+      tags:
+        - bills
+      responses:
+        200:
+          description: 获取账单详情成功
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+
+  /bills/user_accountbill/:
+    post:
+      summary:  账单结算  
+      description: |
+        账单结算  
+      parameters:
+        - name: billid_list
+          in: body
+          description:   要删除的账单id列表  
+          required: true
+          schema:
+            $ref: '#/definitions/delete_bill_pos'
+      tags:
+        - bills
+      responses:
+        200:
+          description: 账单结算成功
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+  
+  /monitor/:
+    post:
+      summary: 监控接口
+      description: 添加用户监控配置 
+      parameters:
+        - name: body
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/add_monitor'
+      tags:
+        - monitor
+      responses:
+        200:
+          description:  监控配置详情  
+          schema:
+            $ref: '#/definitions/monitor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+        
+  /monitor/{payment_accountid}/:
+    patch:
+      summary:   修改告警配置接口
+      description: 修改告警配置接口 
+      parameters:
+        - name: payment_accountid
+          in: path
+          required: true
+          description: 支付支付账户唯一标识
+          type: string 
+        - name: body
+          in: body
+          required: false
+          schema:
+            $ref: '#/definitions/change_monitor'
+      tags:
+        - monitor
+      responses:
+        200:
+          description: 修改成功   
+          schema:
+            $ref: '#/definitions/monitor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /monitor/get_monitor/:
+    post:
+      summary: 通过账户id获取监控记录  
+      description: |
+        通过账户id获取监控记录 
+      parameters:
+        - name: payment_accountid
+          in: body
+          description:  账户id  
+          required: true
+          schema:
+            $ref: '#/definitions/get_monitor'
+      tags:
+        - monitor
+      responses:
+        200:
+          description: 监控设置记录详情 
+          schema:
+            $ref: '#/definitions/monitor'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+  /prices/:
+    get:
+      summary: 获取定价列表 
+      description: |
+        获取定价列表 
+      tags:
+        - prices 
+      responses:
+        200:
+          description: 定价列表
+          schema:
+            $ref: '#/definitions/price'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'         
+            
+  /prices/get_price_bycondition/:
+    post:
+      summary:  根据容器配置查询定价
+      description:  当有新的容器启动时候调用该接口  
+      parameters:
+        - name: body  
+          in: body
+          description:  账户id  
+          required: true
+          schema:
+            $ref: '#/definitions/get_price_bycondition'
+      tags:
+        - prices 
+      responses:
+        200:
+          description:   定价详情 
+          schema:
+            $ref: '#/definitions/price'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+ 
+  /prices/{pricing_size}/:
+    get:
+      summary: 定价查询 
+      description:  根据定价uuid查询定价 
+      parameters:
+        - name: pricing_size
+          in: path
+          required: true
+          description: 支付支付账户唯一标识
+          type: string 
+      tags:
+        - prices
+      responses:
+        200:
+          description:  查询成功   
+          schema:
+            $ref: '#/definitions/price'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+            
+
+  /statistic/:
+    post:
+      summary:   添加容器记录    
+      parameters:
+        - name: body  
+          in: body
+          description:  账户id  
+          required: true
+          schema:
+            $ref: '#/definitions/statistic'
+      tags:
+        - statistic 
+      responses:
+        200:
+          description:   定价详情 
+          schema:
+            $ref: '#/definitions/statistic'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+    
+  /statistic/change_statistic_status/:
+    post:
+      summary:  改变容器状态     
+      parameters:
+        - name: body  
+          in: body
+          description:  账户id  
+          required: true
+          schema:
+            $ref: '#/definitions/change_statistic'
+      tags:
+        - statistic 
+      responses:
+        200:
+          description:    容器状态详情   
+          schema:
+            $ref: '#/definitions/statistic'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+      
+  /statistic/gain_statistic_byid/:
+    post:
+      summary: 容器计量统计查询 
+      description:  根据容器id查询计量统计
+      parameters:
+        - name: body
+          in: body
+          required: true
+          description: 容器计量统计 
+          schema:
+            $ref: '#/definitions/statistic_status'
+      tags:
+        - statistic 
+      responses:
+        200:
+          description:  查询成功   
+          schema:
+            $ref: '#/definitions/price'
+        default:
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/Error'
+          
+definitions:
+  reconciliation_deal:
+    type: object
+    properties:
+      deal_result:
+        type: string
+        description: 处理结果
+      deal_status:
+        type: string
+        description: 处理状态(close)
+  payment_account:
+    type: object
+    properties:
+      payment_account_uuid:
+        type: string
+        description: 账户唯一标识        
+      user_uuid:
+        type: string
+        description: 用户系统envId
+      balance:
+        type: number
+        description: 余额
+      is_valid:
+        type: boolean
+        description: 账户可用性
+      credit:
+        type: number
+        description: 信用额度
+      create_time:
+        type: string
+        description: 账户创建时间
+        
+  payment_account_create:
+    type: object
+    properties:
+      credit:
+        type: number
+        description: 账户信用额度
+      user_uuid:
+        type: string
+        description: 用户系统envId
+      balance:
+        type: number
+        description: 账户余额
+        
+  
+  account_record:
+    type: object
+    properties:
+      account_record_uuid:
+        type: string
+        description: 变更记录唯一标识
+      payment_account_uuid:
+        type: number
+        description: 账户唯一标识 
+      modify_balance:
+        type: number
+        description: 变更金额
+      modify_source_type:
+        type: number
+        description: 变更来源
+      modify_source_uuid:
+        type: number
+        description: 变更来源UUID
+      create_time:
+        type: number
+        description: 变更时间
+      
+  coupon_create:
+    type: object
+    properties:
+      create_count:
+        type: number
+        description: 创建数量
+      coupon_type:
+        type: string
+        description: 优惠码类型, 有discount, reduce, recharge
+      coupon_using_count:
+        type: number
+        description: 优惠码可使用次数
+      coupon_value:
+        type: number
+        description: discount下<100, 其他模式为优惠码值(分)
+      coupon_using_user:
+        type: number
+        description: 优惠码可供使用人数
+      valid_datetime_start:
+        type: string
+        description: 优惠码有效开始时间, UTC
+      valid_datetime_end:
+        type: string
+        description: 优惠码失效时间, UTC
+        
+  coupon:
+    type: object
+    properties:
+      coupon_uuid:
+        type: string
+        description: 优惠码唯一标识
+      coupon_code:
+        type: string
+        description: 优惠码code
+      coupon_type:
+        type: string
+        description: 优惠码类型, 有discount, reduce, recharge
+      coupon_using_count:
+        type: number
+        description: 优惠码可使用次数
+      coupon_value:
+        type: number
+        description: discount下<100, 其他模式为优惠码值(分)
+      coupon_using_user:
+        type: number
+        description: 优惠码可供使用人数
+      using_user_left:
+        type: number
+        description: 优惠码剩余可使用人数
+      valid_datetime_start:
+        type: string
+        description: 优惠码有效开始时间, UTC
+      valid_datetime_end:
+        type: string
+        description: 优惠码失效时间, UTC
+      create_time:
+        type: string
+        description: 优惠码创建时间
+        
+  coupon_user:
+    type: object
+    properties:
+      coupon_user_relate_uuid:
+        type: string
+        description: 绑定记录唯一标识
+      coupon_uuid:
+        type: string
+        description: 优惠码唯一标识
+      user_uuid:
+        type: string
+        description: 用户唯一标识
+      payment_account_uuid:
+        type: string
+        description: 账户唯一标识
+      coupon_code:
+        type: string
+        description: 优惠码code
+      coupon_type:
+        type: string
+        description: 优惠码类型, 有discount, reduce, recharge
+      coupon_using_count:
+        type: number
+        description: 优惠码可使用次数
+      coupon_value:
+        type: number
+        description: discount下<100, 其他模式为优惠码值(分)
+      using_count_left:
+        type: number
+        description: 剩余可用次数
+      valid_datetime_start:
+        type: string
+        description: 优惠码有效开始时间, UTC
+      valid_datetime_end:
+        type: string
+        description: 优惠码失效时间, UTC
+      relate_time:
+        type: string
+        description: 优惠码绑定时间
+
+  coupon_usage:
+    type: object
+    properties:
+      coupon_usage_uuid:
+        type: string
+        description: 优惠码使用记录标识   
+      coupon_uuid:
+        type: string
+        description: 优惠码唯一标识
+      coupon_code:
+        type: string
+        description: 优惠码code
+      user_uuid:
+        type: string
+        description: 用户唯一标识
+      payment_account_uuid:
+        type: string
+        description: 账户唯一标识
+      usage_source_type:
+        type: string
+        description: 使用类型
+      usage_source_uuid:
+        type: string
+        description: 使用来源标识
+      use_time:
+        type: string
+        description: 优惠使用时间
+        
+
+  coupon_user_post:
+    type: object
+    properties:
+      user_uuid:
+        type: string
+        description: 用户唯一标识
+        
+  payment_create:
+    type: object
+    properties:
+      user_uuid:
+        type: string
+        description: 用户uuid
+      coupon_code:
+        type: string
+        description: 优惠码code
+      payment_price:
+        type: number
+        description: 支付单金额(分)
+      paid_method:
+        type: string
+        description: 支付方式
+        
+  payment:
+    type: object
+    properties:
+      payment_uuid:
+        type: string
+        description: 支付单uuid
+      user_uuid:
+        type: string
+        description: 用户uuid
+      payment_account_uuid:
+        type: string
+        description: 账户uuid
+      payment_no:
+        type: string
+        description: 支付单号
+      payment_price:
+        type: number
+        description: 支付单金额
+      paid_method:
+        type: string
+        description: 支付方式
+      real_price:
+        type: number
+        description: 实际支付金额
+      sale_id:
+        type: string
+        description: 交易号
+      is_valid:
+        type: boolean
+        description: 订单有效性
+      coupon_uuid:
+        type: string
+        description: 优惠码uuid
+      coupon_code:
+        type: string
+        description: 优惠码code
+      paid_status:
+        type: string
+        description: 支付单支付状态
+      create_time:
+        type: string
+        description: 支付单创建时间
+      
+  payment_record:
+    type: object
+    properties:
+      payment_record_uuid:
+        type: string
+        description: 支付单处理记录标识
+      payment_uuid:
+        type: string
+        description: 支付单标识
+      paid_method:
+        type: string
+        description: 支付单支付方式
+      pay_request_data:
+        type: string
+        description: 支付单请求信息
+      pay_response_data:
+        type: string
+        description: 支付单响应信息
+      create_time:
+        type: string
+        description: 支付单处理记录创建时间
+     
+  # payment_pay:
+  #   type: object
+  #   properties:
+  #     paid_method:
+  #       type: string
+  #       description: 支付方式
+  #     subject:
+  #       type: string
+  #       description: 支付单标题
+  #     body:
+  #       type: string
+  #       description: 支付单详细说明
+  #     capital_source:
+  #       type: string
+  #       description: 资金来源,"paypal_balance" or "visa" 
+  #     number:
+  #       type: string
+  #       description: visa卡号
+  #     expire_month:
+  #       type: string
+  #       description: visa月份
+  #     expire_year:
+  #       type: string
+  #       description: visa年份
+  #     cvv2:
+  #       type: string
+  #       description: visa cvv2
+        
+  # payment_pre_refund:
+  #   type: object
+  #   properties:
+  #     refund_reason:
+  #       type: string
+  #       description: 退款理由
+        
+  # payment_approval_refund:
+  #   type: object
+  #   properties:
+  #     approval_result:
+  #       type: string
+  #       description: 退款审批结果, agree, disagree
+        
+  # payment_refund:
+  #   type: object
+  #   properties:
+  #     payment_refund_uuid:
+  #       type: string
+  #       description: 退款申请标识
+  #     payment_uuid:
+  #       type: string
+  #       description: 支付单标识
+  #     refund_reason:
+  #       type: string
+  #       description: 退款理由
+  #     refund_status:
+  #       type: string
+  #       description: 退款状态
+  #     create_time:
+  #       type: string
+  #       description: 退款申请时间
+        
+  delete_bill_pos:
+    type: object
+    properties:
+      billid_list:
+        type: ["string"] 
+        description:  要删除的账单id列表
+        
+  getbills_byuserid:
+    type: object
+    properties:
+      user_uuid:
+        type: string 
+        description: 用户的uuid
+
+  monitor:
+    type: object
+    properties:
+      monitor_uuid:
+        type: string 
+        description: 监控配置的uuid
+      payment_accountid:
+        type: string 
+        description: 账户的uuid
+      monitor_type:
+        type: number  
+        description: 监控类型(1:"剩余额度 ”,2:“使用额度 ”)
+      alter_value:
+        type: number 
+        description: 告警值 
+      notify_strategy:
+        type: number 
+        description:  通知策略（1:"短信”，2:“邮件”）
+      check_interval:
+        type: number 
+        description: 检查间隔(小时)
+        
+  add_monitor:
+    type: object
+    properties:
+      payment_accountid:
+        type: string 
+        description: 账户的uuid
+      monitor_type:
+        type: number  
+        description: 监控类型(1:"剩余额度 ”,2:“使用额度 ”)
+      alter_value:
+        type: number 
+        description: 告警值 
+      notify_strategy:
+        type: number 
+        description:  通知策略（1:"短信”，2:“邮件”） 
+      check_interval:
+        type: number 
+        description: 检查间隔(小时)
+        
+  change_monitor:
+    type: object
+    properties:
+      monitor_type:
+        type: number  
+        description:  监控类型(1:"剩余额度 ”,2:“使用额度 ”)
+      alter_value:
+        type: number 
+        description: 告警值 
+      notify_strategy:
+        type: number 
+        description:  通知策略（1:"短信”，2:“邮件”） 
+      check_interval:
+        type: number 
+        description: 检查间隔(小时)
+        
+  get_monitor:
+    type: object
+    properties:
+      payment_accountid:
+        type: string 
+        description:  账户的uuid
+  
+  get_price_bycondition:
+    type: object
+    properties:
+      cpu:
+        type: string 
+        description: 监控类型 
+      mem:
+        type: string 
+        description: 告警值 
+      disk:
+        type: string 
+        description: 统治策略 
+  
+  price:
+    type: object
+    properties:
+      pricing_size:
+        type: string 
+        description:  定价策略uuid  
+      created:
+        type: string 
+        description:  创建日期  
+      cpu:
+        type: number 
+        description:  cpu核数 
+      mem:
+        type: number 
+        description:  内存大小 
+      disk:
+        type: number 
+        description:  磁盘大小 
+      net:
+        type: string 
+        description:  网络类型  
+      cpumemdisk_price:
+        type: number 
+        description: cpu,mem 和disk每分钟定价
+      cpumem_price:
+        type: number 
+        description: cpu,mem每分钟定价 
+      disk_price:
+        type: number 
+        description: 磁盘每分钟定价   
+        
+  statistic:
+    type: object
+    properties:
+      container_uuid:
+        type: string 
+        description:   容器uuid  
+      user_uuid:
+        type: string 
+        description:   用户uuid  
+      container_status:
+        type: number 
+        description:   容器  运行状态 （0:"stop",1:"runing",2:"delete"） 
+      container_starttime:
+        type:  string  
+        description:   容器启动时间  
+      container_cpu:
+        type: number 
+        description:   容器cpu大小 
+      container_mem:
+        type:  number  
+        description:   容器mem 大小   
+      container_disk:
+        type: number 
+        description:  容器磁盘 大小  
+      price_strategy:
+        type: number 
+        description:  容器定价策略（1:"disk×time1 ,2:“disk×time1 +cpu/mem×time2”’）  
+      container_net:
+        type: number 
+        description:   容器网络类型  
+      container_time:
+        type: number 
+        description:   容器运行时间（分钟）  
+      container_lasttime:
+        type: number 
+        description:   容器最后一次启动时间
+        
+  change_statistic:
+    type: object
+    properties:
+      container_uuid:
+        type: string 
+        description:   容器uuid  
+      container_status:
+        type: number 
+        description:   容器运行状态 （0:"stop",1:"runing",2:"delete"）
+        
+  statistic_status:
+    type: object
+    properties:
+      container_uuid:
+        type: string 
+        description:   容器uuid  
+        
+  Error:
+    type: object
+    properties:
+      code:
+        type: integer
+        format: int32
+      message:
+        type: string
+      fields:
+        type: string

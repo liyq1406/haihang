@@ -1,0 +1,83 @@
+{% extends "base.html" %} 
+{% block content %}
+<section class="header">
+    <h1>新建优惠码</h1>
+</section>
+<form action="." method="post">
+    <section class="well">
+            {% csrf_token %} {% load widget_tweaks %}
+            {% if coupon_form.errors%}
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-12 alert alert-danger">
+                     {{ coupon_form.errors }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">优惠码类型:* </label>
+                    </div>
+                    {{ coupon_form.coupon_type|add_class:"form-control" }}
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">优惠码额度:* </label>
+                    </div>
+                    {{ coupon_form.coupon_value|add_class:"form-control" }}
+                    <p class="help-block">当类型为折扣时, 此处代表打折力度,比如80代表8折</p>
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">使用次数:* </label>
+                    </div>
+                    {{ coupon_form.coupon_using_count|add_class:"form-control" }}
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">使用人数:* </label>
+                    </div>
+                    {{ coupon_form.coupon_using_user|add_class:"form-control" }}
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">开始时间:* </label>
+                    </div>
+                    {{ coupon_form.valid_datetime_start|add_class:"form-control" }}
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">结束时间:* </label>
+                    </div>
+                    {{ coupon_form.valid_datetime_end|add_class:"form-control" }}
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">生成优惠码数量:* </label>
+                    </div>
+                    {{ coupon_form.coupon_count|add_class:"form-control" }}
+                    <p class="help-block">一次生成优惠码数量[1-1000]</p>
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">&nbsp;</label>
+                    </div>
+                    {% if coupon_path %}
+                    <a class="btn btn-success" target="_blank" href="/cms/coupon/download/?target={{coupon_path}}">下载优惠码</a>
+                    {% endif %}
+                </div>
+            </div>
+    </section>
+
+    <div class="footer-actions">
+        <button type="submit"  class="btn btn-primary">创建</button>
+        <a href="/cms/coupon/?page=1" class="btn btn-link">取消</a>
+    </div>
+</form>
+{% endblock %}

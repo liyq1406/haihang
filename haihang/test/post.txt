@@ -1,0 +1,5 @@
+{
+    "paid_method": "alipay",
+    "payment_price": 10000,
+    "user_uuid": "66"
+}

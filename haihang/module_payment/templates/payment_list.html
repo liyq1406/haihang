@@ -1,0 +1,75 @@
+{% extends "base.html" %} 
+{% block content %}
+<section class="header">
+    <h1>支付单</h1>
+    <a href="/cms/payment/refund/" class="btn btn-sm btn-primary">处理退款申请</a>
+</section>
+
+<div class="clearfix"></div>
+<div class="well">
+    <div class="form-inline r-mb15 inline-block pull-right">
+        <div class="form-group">
+            <input id="search-uuid" type="text" placeholder="UUID" class="form-control">
+            <button onClick="doSearch()" class="r-m5 btn btn-primary">搜索</button>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover" width="100%">
+        <thead>
+            <tr>
+                <th>支付单UUID</th>
+                <th>账户UUID</th>
+                <th>支付单号</th>
+                <th>价格</th>
+                <th>支付方式</th>
+                <th>实付价格</th>
+                <th>支付状态</th>
+                <th>创建时间</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for payment in payments %}
+            <tr>
+                <td>{{payment.payment_uuid}}</td>
+                <td>{{payment.payment_account_uuid}}</td>
+                <td>{{payment.payment_no}}</td>
+                <td>{{payment.payment_price}}</td>
+                <td>{{payment.paid_method}}</td>
+                <td>{{payment.real_price}}</td>
+                <td>{{payment.paid_status}}</td>
+                <td>{{payment.create_time|date:"Y-m-d H:i:s.T"}}</td>
+                <td style="text-align: center;">
+                    <div class="dropdown">
+                        <span class="dropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            <a href dropdown-toggle>
+                                <i class="fa fa-ellipsis-h" aria-hidden="true" style="color:gray;"></i>
+                            </a>
+                        </span>
+                        <ul class="dropdown-menu operation-dropdown" style="min-width: 80px;">
+                            <li><a href="/cms/payment/{{payment.payment_uuid}}/detail/">查看详情</a></li>
+                            <li><a href="/cms/payment/{{payment.payment_uuid}}/record/">处理记录</a></li>
+                        </ul>
+                    </div>    
+                </td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10">暂无数据</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="container-paginatio text-center">
+        <a href="/cms/payment/?page={{payments.number|add:-1}}" class="btn btn-sm btn-default {{page_info.pre|yesno:' ,disabled, '}}">上一页</a>
+        <a href="/cms/payment/?page={{payments.number|add:1}}" class="btn btn-sm btn-default {{page_info.next|yesno:' ,disabled, '}}">下一页</a>
+    </div>
+</div>
+{% block extend-js %}
+<script>
+    function doSearch() {
+        var uuid = $('#search-uuid').val();
+        window.location.href="/cms/payment/?search="+uuid; 
+    }
+</script> 
+{% endblock %} 
+{% endblock %}

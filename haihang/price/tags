@@ -1,0 +1,59 @@
+!_TAG_FILE_FORMAT	2	/extended format; --format=1 will not append ;" to lines/
+!_TAG_FILE_SORTED	1	/0=unsorted, 1=sorted, 2=foldcase/
+!_TAG_PROGRAM_AUTHOR	Darren Hiebert	/dhiebert@users.sourceforge.net/
+!_TAG_PROGRAM_NAME	Exuberant Ctags	//
+!_TAG_PROGRAM_URL	http://ctags.sourceforge.net	/official site/
+!_TAG_PROGRAM_VERSION	5.9~svn20110310	//
+IsOwnerOrReadOnly	permissions.py	/^class IsOwnerOrReadOnly(permissions.BasePermission):$/;"	c
+Meta	models.py	/^	class Meta:$/;"	c	class:Price
+Meta	serializers.py	/^    class Meta:$/;"	c	class:PriceSerializer
+Meta	serializers.py	/^    class Meta:$/;"	c	class:UserSerializer
+Migration	migrations/0001_initial.py	/^class Migration(migrations.Migration):$/;"	c
+Price	models.py	/^class Price(models.Model):$/;"	c
+PriceAdmin	admin.py	/^class PriceAdmin(admin.ModelAdmin):$/;"	c
+PriceConfig	apps.py	/^class PriceConfig(AppConfig):$/;"	c
+PriceSerializer	serializers.py	/^class PriceSerializer(serializers.ModelSerializer):$/;"	c
+PriceViewSet	views.py	/^class PriceViewSet(viewsets.ModelViewSet):$/;"	c
+UserSerializer	serializers.py	/^class UserSerializer(serializers.ModelSerializer):$/;"	c
+UserViewSet	views.py	/^class UserViewSet(viewsets.ReadOnlyModelViewSet):$/;"	c
+__unicode__	models.py	/^	def __unicode__(self):$/;"	m	class:Price	file:
+api_root	views.py	/^def api_root(request, format=None):$/;"	f
+cpu	models.py	/^	cpu = models.IntegerField(verbose_name='cpu(核数)')$/;"	v	class:Price
+cpumem_price	models.py	/^	cpumem_price = models.FloatField(verbose_name='cpu+mem(分\/分钟)')$/;"	v	class:Price
+cpumemdisk_price	models.py	/^	cpumemdisk_price = models.FloatField(verbose_name='cpu+mem+disk(分\/分钟)')$/;"	v	class:Price
+created	models.py	/^	created=models.DateTimeField(max_length=50,auto_now_add=True,verbose_name='生成日期')$/;"	v	class:Price
+dependencies	migrations/0001_initial.py	/^    dependencies = [$/;"	v	class:Migration
+disk	models.py	/^	disk = models.IntegerField(verbose_name='磁盘(MB)')$/;"	v	class:Price
+disk_price	models.py	/^	disk_price = models.FloatField(verbose_name='disk(分\/分钟)')$/;"	v	class:Price
+fields	migrations/0001_initial.py	/^            fields=[$/;"	v	class:Migration
+fields	serializers.py	/^        fields = ('created','pricing_size','cpu','mem','disk','net','cpumemdisk_price','cpumem_price','disk_price','owner')$/;"	v	class:PriceSerializer.Meta
+fields	serializers.py	/^        fields = ('url','id', 'username', 'prices')$/;"	v	class:UserSerializer.Meta
+has_object_permission	permissions.py	/^    def has_object_permission(self, request, view, obj):$/;"	m	class:IsOwnerOrReadOnly
+initial	migrations/0001_initial.py	/^    initial = True$/;"	v	class:Migration
+list_display	admin.py	/^    list_display=('created','cpu','mem','disk','net','cpumemdisk_price','cpumem_price','disk_price')$/;"	v	class:PriceAdmin
+list_filter	admin.py	/^    list_filter=('created','pricing_size','cpu','mem','disk','net','cpumemdisk_price','cpumem_price','disk_price')$/;"	v	class:PriceAdmin
+mem	models.py	/^	mem = models.IntegerField(verbose_name='内存(MB)')$/;"	v	class:Price
+model	serializers.py	/^        model = Price$/;"	v	class:PriceSerializer.Meta
+model	serializers.py	/^        model = User$/;"	v	class:UserSerializer.Meta
+name	apps.py	/^    name = 'price'$/;"	v	class:PriceConfig
+name	migrations/0001_initial.py	/^            name='Price',$/;"	v	class:Migration
+net	models.py	/^	net = models.CharField(max_length=20, default='FREE')$/;"	v	class:Price
+operations	migrations/0001_initial.py	/^    operations = [$/;"	v	class:Migration
+options	migrations/0001_initial.py	/^            options={$/;"	v	class:Migration
+ordering	models.py	/^		ordering = ('created',)$/;"	v	class:Price.Meta
+owner	models.py	/^	owner = models.ForeignKey('auth.User',related_name='prices')$/;"	v	class:Price
+owner	serializers.py	/^    owner = serializers.ReadOnlyField(source='owner.username')$/;"	v	class:PriceSerializer
+perform_create	views.py	/^    def perform_create(self, serializer):$/;"	m	class:PriceViewSet
+permission_classes	serializers.py	/^        permission_classes = (permissions.IsAuthenticatedOrReadOnly,)$/;"	v	class:PriceSerializer.Meta
+permission_classes	serializers.py	/^        permission_classes = (permissions.IsAuthenticatedOrReadOnly,)/;"	v	class:UserSerializer.Meta
+permission_classes	views.py	/^    permission_classes = (permissions.IsAuthenticatedOrReadOnly,$/;"	v	class:PriceViewSet
+prices	serializers.py	/^    prices = serializers.HyperlinkedRelatedField(many=True, view_name='price-detail', read_only=True)$/;"	v	class:UserSerializer
+pricing_size	models.py	/^	pricing_size = models.UUIDField(primary_key=True,default=uuid.uuid1,editable=False)$/;"	v	class:Price
+queryset	views.py	/^    queryset = Price.objects.all()$/;"	v	class:PriceViewSet
+queryset	views.py	/^    queryset = User.objects.all()$/;"	v	class:UserViewSet
+router	urls.py	/^router = DefaultRouter()$/;"	v
+search_fields	admin.py	/^    search_fields=('created','pricing_size','cpu','mem','disk','net','cpumemdisk_price','cpumem_price','disk_price')$/;"	v	class:PriceAdmin
+serializer_class	views.py	/^    serializer_class = PriceSerializer$/;"	v	class:PriceViewSet
+serializer_class	views.py	/^    serializer_class = UserSerializer$/;"	v	class:UserViewSet
+urlpatterns	urls.py	/^urlpatterns = [$/;"	v
+verbose_name_plural	models.py	/^		verbose_name_plural = '定价表'$/;"	v	class:Price.Meta

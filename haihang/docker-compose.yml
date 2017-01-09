@@ -1,0 +1,76 @@
+version: "2"
+services:
+  gunicorn_nginx:
+    restart: always
+    build:
+      context: .
+      dockerfile: ./build/gunicorn_nginx/Dockerfile
+    networks:
+      - payment
+    depends_on:
+      - payment
+    environment:
+      - BACKEND=payment:8000
+    ports:
+      - "8081:80"
+  payment:
+    restart: always
+    build:
+      context: .
+      dockerfile: build/django_hna/Dockerfile
+    networks:
+      - payment
+    depends_on:
+      - mysql
+      - redis
+    volumes:
+      - runtime_data:/Payment/data
+      - /etc/localtime:/etc/localtime:ro
+    environment:
+      - IS_MASTER=1
+      - MYSQL_USER=root
+      - MYSQL_DATABASE_NAME=haihang
+      - MYSQL_PASSWORD=123456
+      - MYSQL_HOST=mysql
+      - MYSQL_PORT=3306
+      - PUBLIC_HOST=54.223.122.245
+      - PUBLIC_PORT=8081
+      - RANCHER_URL=http://54.223.81.211:3000/v1-usage/account/
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_DB=0
+      - ALERT_URL=http://223.202.32.56:8078/mc/v1/message/receive/
+      - API_KEY=0D02C551372B79DE6E68
+      - API_PASS=G4kqtMgJXndw8K5gfMjdnPTbDYNiWRTuiGsJmTgn
+      - USER_SYSTEM_URL=http://10.0.128.199:8081/v1/projects/user/authentication
+    ports:
+      - "8000"
+  mysql:
+    restart: always
+    networks:
+      - payment
+    volumes:
+      - mysql_data:/var/lib/mysql
+    build:
+      context: ./build/mysql_hna
+      dockerfile: Dockerfile
+    environment:
+      - MYSQL_ROOT_PASSWORD=123456
+    command: mysqld --innodb_file_per_table
+    ports:
+      - "3306:3306"
+  redis:
+    restart: always
+    networks:
+      - payment
+    image: redis
+
+volumes:
+  runtime_data:
+    external: false
+  mysql_data:
+    external: false
+networks:
+  payment:
+    external: false
+

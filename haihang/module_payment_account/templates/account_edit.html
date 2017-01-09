@@ -1,0 +1,54 @@
+{% extends "base.html" %} 
+{% block content %}
+<section class="header">
+    {% ifequal mode 'create' %}
+    <h1>新建账户</h1>
+    {% else %}
+    <h1>修改账户</h1>
+    {% endifequal %}
+</section>
+<form action="." method="post">
+    <section class="well">
+            {% csrf_token %} {% load widget_tweaks %}
+            {% if account_form.errors%}
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-12 alert alert-danger">
+                     {{ account_form.errors }}
+                </div>
+            </div>
+            {% endif %}
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">信用额度: </label>
+                    </div>
+                    {{ account_form.credit|add_class:"form-control" }}
+                </div>
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">账户余额: </label>
+                    </div>
+                    {{ account_form.balance|add_class:"form-control" }}
+                </div>
+            </div>
+            <div class="row form-group">
+                <div class="col-sm-12 col-md-6">
+                    <div class="form-label">
+                        <label class="form-control-static">用户UUID:* </label>
+                    </div>
+                    {% ifequal mode 'create' %}
+                    {{ account_form.user_uuid|add_class:"form-control" }}
+                    {% else %}
+                    {{ account_form.user_uuid|add_class:"form-control" |attr:"readonly" }}
+                    {% endifequal %}
+                    <p class="help-block">UUID为32位字符串</p>
+                </div>
+            </div>
+    </section>
+
+    <div class="footer-actions">
+        <button type="submit"  class="btn btn-primary">保存</button>
+        <a href="/cms/account/?page=1" class="btn btn-link">取消</a>
+    </div>
+</form>
+{% endblock %}

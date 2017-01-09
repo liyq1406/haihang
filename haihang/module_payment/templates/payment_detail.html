@@ -1,0 +1,79 @@
+{% extends "base.html" %} 
+{% block content %}
+<section class="header">
+    <h1>支付单详情</h1>
+</section>
+
+<div class="well">
+    <div>
+        <span class="detail-icon"><i class="fa fa-credit-card"></i></span>
+        <span class="detail-label"><label class="form-control-static">支付单UUID: </label></span>
+        <span>{{ payment.payment_uuid }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-user"></i></span>
+        <span class="detail-label"><label class="form-control-static">用户UUID: </label></span>
+        <span>{{ payment.user_uuid }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-user-md"></i></span>
+        <span class="detail-label"><label class="form-control-static">账户UUID: </label></span>
+        <span>{{ payment.payment_account_uuid }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-random"></i></span>
+        <span class="detail-label"><label class="form-control-static">支付单号: </label></span>
+        <span>{{ payment.payment_no }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-money"></i></span>
+        <span class="detail-label"><label class="form-control-static">支付单价格: </label></span>
+        <span>{{ payment.payment_price }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-stethoscope"></i></span>
+        <span class="detail-label"><label class="form-control-static">支付方式: </label></span>
+        <span>{{ payment.paid_method }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-cny"></i></span>
+        <span class="detail-label"><label class="form-control-static">实际价格: </label></span>
+        <span>{{ payment.real_price }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-paypal"></i></span>
+        <span class="detail-label"><label class="form-control-static">Paypal订单号: </label></span>
+        <span>{{ payment.paypal_id }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-dollar"></i></span>
+        <span class="detail-label"><label class="form-control-static">Paypal价格: </label></span>
+        <span>{{ payment.paypal_price }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-cc-visa"></i></span>
+        <span class="detail-label"><label class="form-control-static">销售号: </label></span>
+        <span>{{ payment.sale_id }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-ioxhost"></i></span>
+        <span class="detail-label"><label class="form-control-static">优惠码UUID: </label></span>
+        <span>{{ payment.coupon_uuid }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-bars"></i></span>
+        <span class="detail-label"><label class="form-control-static">优惠码code: </label></span>
+        <span>{{ payment.coupon_code }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-meh-o"></i></span>
+        <span class="detail-label"><label class="form-control-static">支付单状态: </label></span>
+        <span>{{ payment.paid_status }}</span>
+    </div>
+    <div>
+        <span class="detail-icon"><i class="fa fa-calendar"></i></span>
+        <span class="detail-label"><label class="form-control-static">创建时间: </label></span>
+        <span>{{ payment.create_time|date:"Y-m-d H:i:s.T" }}</span>
+    </div>
+</div> 
+{% endblock %}

@@ -1,0 +1,16 @@
+upstream backend {
+    server ${BACKEND};
+}
+
+server {
+      listen 80;
+      server_name localhost;
+      location / {
+            proxy_pass http://backend;
+        }
+
+      location ~*\.(html|js|svg|css|png|woff2|woff|ttf|jpg|ico|json|yaml) {
+          root /payment;
+          allow all;
+      }
+}

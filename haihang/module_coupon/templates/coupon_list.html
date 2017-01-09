@@ -1,0 +1,63 @@
+{% extends "base.html" %} 
+{% block content %}
+<section class="header">
+    <h1>优惠码</h1>
+    <a href="/cms/coupon/create/" class="btn btn-sm btn-primary">新建</a>
+</section>
+
+<div class="clearfix"></div>
+<div class="well">
+    <div class="form-inline r-mb15 inline-block pull-right">
+        <div class="form-group">
+            <input id="search-uuid" type="text" placeholder="优惠码uuid 或 code" class="form-control">
+            <button onClick="doSearch()" class="r-m5 btn btn-primary">搜索</button>
+        </div>
+    </div>
+    <table class="table table-striped table-bordered table-hover" width="100%">
+        <thead>
+            <tr>
+                <th>优惠码UUID</th>
+                <th>优惠码code</th>
+                <th>类型</th>
+                <th>价值</th>
+                <th>可用次数</th>
+                <th>可用人数</th>
+                <th>剩余人数</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for coupon in coupons %}
+            <tr>
+                <td><a href="/cms/coupon/{{coupon.coupon_uuid}}/record/">{{coupon.coupon_uuid}}</a></td>
+                <td>{{coupon.coupon_code}}</td>
+                <td>{{coupon.coupon_type}}</td>
+                <td>{{coupon.coupon_value}}</td>
+                <td>{{coupon.coupon_using_count}}</td>
+                <td>{{coupon.coupon_using_user}}</td>
+                <td>{{coupon.using_user_left}}</td>
+                <td>{{coupon.valid_datetime_start|date:"Y-m-d H:i:s.T"}}</td>
+                <td>{{coupon.valid_datetime_end|date:"Y-m-d H:i:s.T"}}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="10">暂无数据</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <div class="container-paginatio text-center">
+        <a href="/cms/coupon/?page={{coupons.number|add:-1}}" class="btn btn-sm btn-default {{page_info.pre|yesno:' ,disabled, '}}">上一页</a>
+        <a href="/cms/coupon/?page={{coupons.number|add:1}}" class="btn btn-sm btn-default {{page_info.next|yesno:' ,disabled, '}}">下一页</a>
+    </div>
+</div>
+{% block extend-js %}
+<script>
+    function doSearch() {
+        var uuid = $('#search-uuid').val();
+        window.location.href="/cms/coupon/?search="+uuid; 
+    }
+</script> 
+{% endblock %} 
+{% endblock %}
